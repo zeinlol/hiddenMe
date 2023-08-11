@@ -12,12 +12,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import pathlib
 # noinspection PyPackageRequirements
 import environ
-env = environ.Env()
 
 ROOT_DIR = environ.Path(__file__) - 3  # (hiddenMe/config/settings/base.py - 3 = hiddenMe/)
 ROOT_DIR__BY_PATHLIB = pathlib.Path(ROOT_DIR)
 
-APPS_DIR = ROOT_DIR__BY_PATHLIB.joinpath("venom")
+APPS_DIR = ROOT_DIR__BY_PATHLIB.joinpath("hiddenMe")
+
+# Load operating system environment variables and then prepare to use them
+env = environ.Env()
+
+env_file = str(ROOT_DIR.path(".env"))
+print(f"Loading : {env_file}")
+env.read_env(env_file)
+print("The .env file has been loaded. See base.py for more information")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -44,13 +51,15 @@ DJANGO_APPS = [
 ]
 
 LOCAL_APPS = [
-
+    "hiddenMe.account",
 ]
 
 THIRD_PARTY_APPS = [
-    'rest_framework',
+    "allauth",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    "knox",
+    'rest_framework',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -64,8 +73,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-ROOT_URLCONF = 'hiddenMe.urls'
 
 TEMPLATES = [
     {
@@ -83,16 +90,26 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'hiddenMe.wsgi.application'
+# URL Configuration
+# ------------------------------------------------------------------------------
+ROOT_URLCONF = "config.urls"
 
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
+WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# TODO: Rework to use normal database in real project
+# DATABASES = {
+#     "default": env.db("DATABASE_URL", default="postgresql:///hiddenMe"),
+# }
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgresql:///hiddenMe"),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': f'{ROOT_DIR}/db.sqlite3',
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -111,7 +128,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+# [rest_auth_settings]-[BEGIN]
+REST_AUTH = dict(
+    SESSION_LOGIN=False,
+    OLD_PASSWORD_FIELD_ENABLED=True,
+    TOKEN_CREATOR="hiddenMe.account.utils.create_token",
+    TOKEN_MODEL="knox.models.AuthToken",
+)
+# [rest_auth_settings]-[END]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -125,12 +149,32 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# STATIC FILE CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = str(ROOT_DIR("staticfiles"))
 
-STATIC_URL = 'static/'
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+STATIC_URL = "/static/"
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+STATIC_MAIN_DIR = str(APPS_DIR.joinpath("static"))
+
+STATICFILES_DIRS = [
+    STATIC_MAIN_DIR,
+]
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+PUBLIC_SITE_URL = env.str("PUBLIC_SITE_URL", "http://localhost/")
+
+
+AUTH_USER_MODEL = 'account.User'

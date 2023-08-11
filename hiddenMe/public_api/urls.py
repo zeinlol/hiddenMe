@@ -6,7 +6,7 @@ urlpatterns = [
         "v1/",
         include(
             [
-
+                path("account/", include("hiddenMe.account.urls"))
             ]
         ),
     ),

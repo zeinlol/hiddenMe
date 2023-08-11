@@ -1,0 +1,2 @@
+from .is_instance_owner_only import IsInstanceOwnerOnly
+from .is_super_user_or_staff import IsSuperUserOrStaff

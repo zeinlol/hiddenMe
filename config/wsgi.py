@@ -23,6 +23,6 @@ app_path = os.path.dirname(__file__).replace("/config", "")
 sys.path.append(os.path.join(app_path, "hiddenMe"))
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.base")
 
 application = get_wsgi_application()

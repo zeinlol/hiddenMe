@@ -3,8 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import register_converter, path, include
 from django.views import defaults as default_views
-
-from hiddenMe.base import converters
+from hiddenMe.base import converters, views
 
 register_converter(converters.UlidConverter, "ulid")
 
