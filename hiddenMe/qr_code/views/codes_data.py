@@ -1,0 +1,10 @@
+from rest_framework import generics
+
+from hiddenMe.qr_code import models
+
+
+class CodesDataView(generics.ListCreateAPIView):
+    queryset = models.QRCode.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)

@@ -96,4 +96,5 @@ class UserGeneralInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        ...
+        serializer = LoginResponseSerializer(instance=request.user, context={"request": self.request})
+        return serializer.data

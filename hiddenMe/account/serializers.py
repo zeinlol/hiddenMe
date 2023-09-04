@@ -20,7 +20,6 @@ class LoginResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = (
-            "id",
             "uid",
             "username",
             "email",

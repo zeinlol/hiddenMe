@@ -8,6 +8,10 @@ django-model-utils==4.3.1
 django-rest-knox==4.2.0
 
 # Models
-faker==19.2.0
+faker==19.3.0
 ulid~=1.1
 ulid-py==1.1.0
+
+# QR code
+Pillow==10.0.0
+qrcode[PIL]==7.4.2
