@@ -13,5 +13,5 @@ ulid~=1.1
 ulid-py==1.1.0
 
 # QR code
-Pillow==10.0.0
+Pillow==10.0.1
 qrcode[PIL]==7.4.2
