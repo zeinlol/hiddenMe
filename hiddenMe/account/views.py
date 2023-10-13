@@ -1,18 +1,19 @@
-
-from rest_framework import views, permissions, status
 from allauth.account.utils import complete_signup
 from dj_rest_auth import views as rest_auth_views
 from dj_rest_auth.app_settings import api_settings
 from dj_rest_auth.registration import views as registration_views
-from django.contrib.auth import user_logged_out, get_user_model
+from django.contrib.auth import user_logged_out, get_user_model, user_logged_in
+from rest_framework import views, permissions, status
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from hiddenMe.account.serializers import LoginResponseSerializer
+from hiddenMe.account import serializers
+from hiddenMe.account.utils import delete_token_cookie, set_token_cookie
 
 User = get_user_model()
+
 
 class UserView(RetrieveAPIView):
     """
@@ -20,7 +21,7 @@ class UserView(RetrieveAPIView):
     Accepts GET method.
     """
 
-    serializer_class = LoginResponseSerializer
+    serializer_class = serializers.LoginResponseSerializer
     permission_classes = (
         IsAuthenticated,
         # TokenHasReadWriteScope,
@@ -29,19 +30,12 @@ class UserView(RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-    def get_queryset(self):
-        """
-        Adding this method since it is sometimes called when using
-        django-rest-swagger
-        https://github.com/Tivix/django-rest-auth/issues/275
-        """
-        return get_user_model().objects.none()
 
 class RegisterView(registration_views.RegisterView):
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     def get_response_data(self, user):
-        serializer = LoginResponseSerializer(instance=user, context={"request": self.request})
+        serializer = serializers.RegisterSerializer(instance=user, context={"request": self.request})
         return serializer.data
 
     def perform_create(self, serializer):
@@ -64,6 +58,14 @@ class LoginView(rest_auth_views.LoginView):
     permission_classes = (AllowAny,)
     authentication_classes = ()
 
+    def get_response(self):
+        serializer = serializers.LoginResponseSerializer(instance=self.user, context={"request": self.request})
+
+        response = Response(serializer.data, status=status.HTTP_200_OK)
+        set_token_cookie(response, self.token[1])
+        user_logged_in.send(sender=self.user.__class__, request=self.request, user=self.user)
+        return response
+
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -73,7 +75,10 @@ class LogoutView(APIView):
         # noinspection PyProtectedMember
         request._auth.delete()
         user_logged_out.send(sender=request.user.__class__, request=request, user=request.user)
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        response = Response(None, status=status.HTTP_204_NO_CONTENT)
+
+        delete_token_cookie(response)
+        return response
 
 
 class LogoutAllView(APIView):
@@ -84,7 +89,8 @@ class LogoutAllView(APIView):
 
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         request.user.auth_token_set.all().delete()
         request.user.user_device_set.all().delete()
         user_logged_out.send(
@@ -92,9 +98,10 @@ class LogoutAllView(APIView):
         )
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+
 class UserGeneralInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        serializer = LoginResponseSerializer(instance=request.user, context={"request": self.request})
+        serializer = serializers.LoginResponseSerializer(instance=request.user, context={"request": self.request})
         return serializer.data

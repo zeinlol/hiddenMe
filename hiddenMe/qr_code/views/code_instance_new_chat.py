@@ -6,6 +6,7 @@ from hiddenMe.chat import models, serializers
 
 class CodeInstanceChats(generics.CreateAPIView):
     serializer_class = serializers.Chat
+
     def create(self, request, *args, **kwargs):
         qr_code_uid = self.kwargs["qr_uid"]
         qr_code = self.queryset.get(uid=qr_code_uid)

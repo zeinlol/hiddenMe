@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import pathlib
+from datetime import timedelta
+
 # noinspection PyPackageRequirements
 import environ
 
@@ -52,23 +54,31 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     "hiddenMe.account",
+    "hiddenMe.base",
+    "hiddenMe.chat",
+    "hiddenMe.message",
+    "hiddenMe.qr_code",
 ]
 
 THIRD_PARTY_APPS = [
-    "allauth",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "knox",
     'rest_framework',
+    'corsheaders',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -128,14 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-# [rest_auth_settings]-[BEGIN]
-REST_AUTH = dict(
-    SESSION_LOGIN=False,
-    OLD_PASSWORD_FIELD_ENABLED=True,
-    TOKEN_CREATOR="hiddenMe.account.utils.create_token",
-    TOKEN_MODEL="knox.models.AuthToken",
-)
-# [rest_auth_settings]-[END]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -177,4 +180,35 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PUBLIC_SITE_URL = env.str("PUBLIC_SITE_URL", "http://localhost/")
 
 
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'hidden_me_account.User'
+
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", False)
+
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# app token cookie settings
+APP_TOKEN_COOKIE_NAME = "hidden_me_token"
+# number of second to expire this cookie, sync this with TOKEN_TTL because this token stored in this cookie
+APP_TOKEN_COOKIE_AGE = timedelta(days=14).total_seconds()
+APP_TOKEN_COOKIE_DOMAIN = None
+APP_TOKEN_COOKIE_PATH = "/"
+APP_TOKEN_COOKIE_SECURE = False
+APP_TOKEN_COOKIE_HTTPONLY = False
+
+# [rest_auth_settings]-[BEGIN]
+REST_AUTH = dict(
+    SESSION_LOGIN=False,
+    OLD_PASSWORD_FIELD_ENABLED=True,
+    TOKEN_CREATOR="hiddenMe.account.utils.create_token",
+    TOKEN_MODEL="knox.models.AuthToken",
+    REGISTER_SERIALIZER="hiddenMe.account.serializers.RegisterSerializer",
+    # PASSWORD_RESET_SERIALIZER="hiddenMe.account.serializers.UserPasswordResetSerializer",
+)
+# [rest_auth_settings]-[END]

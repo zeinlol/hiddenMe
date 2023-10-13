@@ -10,8 +10,6 @@ class LoginResponseSerializer(serializers.ModelSerializer):
     Minimal User model w/o password
     """
 
-    avatar = serializers.CharField(source="avatar_url")
-
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret["admin"] = bool(instance.is_superuser or instance.is_staff)
