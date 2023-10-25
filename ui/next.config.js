@@ -8,7 +8,4 @@ module.exports = withBundleAnalyzer({
     eslint: {
         ignoreDuringBuilds: true,
     },
-    experimental: {
-        appDir: true,
-    },
-});
+})

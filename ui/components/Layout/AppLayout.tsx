@@ -5,7 +5,7 @@ import { AppNavbar } from '../Navbar/AppNavbar'
 export const AppLayout = ({
   children,
 }: {
-    children: ReactNode;
+    children: ReactNode
 }): JSX.Element => (
   <AppShell
     padding="md"

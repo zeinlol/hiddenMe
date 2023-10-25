@@ -1,9 +1,10 @@
-import NextApp, { AppProps, AppContext } from 'next/app'
-import { getCookie, setCookie } from 'cookies-next'
+import NextApp, { AppContext, AppProps } from 'next/app'
+import { getCookie, deleteCookie } from 'cookies-next'
 import Head from 'next/head'
-import { MantineProvider, ColorScheme, ColorSchemeProvider, MantineThemeOverride } from '@mantine/core'
+import { ColorScheme, ColorSchemeProvider, MantineProvider, MantineThemeOverride } from '@mantine/core'
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { AKNotificationsMain } from '../components/AKFramework'
+import { AppRequestClient } from '../lib/app-client'
 
 // noinspection LongLine
 const theme: MantineThemeOverride = {
@@ -26,14 +27,7 @@ const AuthProvider = ({
   const loading = useRef(false)
 
   const redirectAuthenticated = () => {
-    console.log('redirectAuthenticated')
-    // const hiddenMeDomain =
-    //         process.env.NODE_ENV === 'development'
-    //           ? 'hiddenMe.localhost'
-    //           : 'hiddenMe.io'
-    // document.location.href = hiddenMeDomain
-    //   ? '/installations'
-    //   : '/dashboard'
+    document.location.href = '/dashboard'
   }
 
   const unauthenticatedRoutes = [
@@ -44,7 +38,6 @@ const AuthProvider = ({
   ]
 
   const authSuccess = () => {
-    console.log('authSuccess')
     if (document.location.pathname === '/login') {
       redirectAuthenticated()
       return
@@ -53,38 +46,33 @@ const AuthProvider = ({
   }
 
   const authFailure = () => {
+    deleteCookie('hidden-me-auth-token')
     // only redirect to log in if we're not already on an unauthenticated route
-    // if (!unauthenticatedRoutes.includes(document.location.pathname)) {
-    //   document.location.href = '/login'
-    //   setReady(true)
-    // } else {
-    //   setReady(true)
-    // }
+    if (!unauthenticatedRoutes.includes(document.location.pathname)) {
+      document.location.href = '/login'
+      setReady(true)
+    }
     setReady(true)
   }
 
   useEffect(() => {
     (async () => {
-      console.log('useEffect')
-      if (loading.current) return
+      if (loading.current) {
+        return
+      }
       loading.current = true
       let userUUID = localStorage.getItem('userUUID') || ''
       // maybe we have the access token, but we're missing the userUUID from localStorage
       if (userUUID === '') {
         console.log('missing userUUID')
-        const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL
         // try to set it first before redirecting
-        const res = await fetch(`${BASE_API_URL}account/user/`, {
-          method: 'GET',
-        })
-
-        if (res.status !== 200) {
+        try {
+          const res = await AppRequestClient.getAccountGetMyInfo()
+          userUUID = res?.uid || ''
+        } catch (e) {
           authFailure()
           return
         }
-
-        const data = res.json()
-        userUUID = data?.uid || ''
         if (userUUID === '') {
           authFailure()
           return
@@ -93,17 +81,11 @@ const AuthProvider = ({
       }
       // we definitely have the userUUID, so we can try to authenticate
       // if we authenticated within the last 30 minutes, we don't need to do anything
-      if (userUUID !== '' && localStorage.getItem('lastAuth') != null) {
-        const t1 = new Date(localStorage.getItem('lastAuth') || '')
-        const t2 = new Date()
-
-        if (t2.getTime() - t1.getTime() < 1000 * 60 * 30) {
-          authSuccess()
-          return
-        }
-        localStorage.removeItem('lastAuth')
+      if (userUUID !== '') {
+        authSuccess()
       }
-    })().catch(_ => {
+    })().catch(e => {
+      console.log(e)
       authFailure()
     })
   }, [])
@@ -119,10 +101,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark')
     setColorScheme(nextColorScheme)
-    setCookie('hidden-me-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 })
   }
   useEffect(() => {
-    if (setupInProgress.current) return
+    if (setupInProgress.current) {
+      return
+    }
     setupInProgress.current = true
 
     // register dark theme media query listener
@@ -167,6 +150,6 @@ App.getInitialProps = async (appContext: AppContext) => {
   return {
     ...appProps,
     colorScheme: getCookie('hidden-me-color-scheme', appContext.ctx) || 'dark',
-    appToken: getCookie('hidden_me_token', appContext.ctx) || '',
+    appToken: getCookie('hidden-me-auth-token', appContext.ctx) || '',
   }
 }

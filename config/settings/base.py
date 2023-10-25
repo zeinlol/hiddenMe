@@ -33,13 +33,15 @@ print("The .env file has been loaded. See base.py for more information")
 
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
-
 ADMIN_URL = env("DJANGO_ADMIN_URL")
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SITE_ID = 1
+
 
 DEBUG = env("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -61,24 +63,26 @@ LOCAL_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    "dj_rest_auth",
-    "dj_rest_auth.registration",
     "knox",
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
-    'allauth.account.middleware.AccountMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -109,11 +113,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# TODO: Rework to use normal database in real project
-# DATABASES = {
-#     "default": env.db("DATABASE_URL", default="postgresql:///hiddenMe"),
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -139,7 +138,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -150,7 +148,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -179,11 +176,13 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PUBLIC_SITE_URL = env.str("PUBLIC_SITE_URL", "http://localhost/")
 
-
 AUTH_USER_MODEL = 'hidden_me_account.User'
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", False)
-
+CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ALLOW_ALL_ORIGINS", False)
+CORS_ALLOW_CREDENTIALS = True
 
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
@@ -193,22 +192,35 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-# app token cookie settings
-APP_TOKEN_COOKIE_NAME = "hidden_me_token"
-# number of second to expire this cookie, sync this with TOKEN_TTL because this token stored in this cookie
-APP_TOKEN_COOKIE_AGE = timedelta(days=14).total_seconds()
-APP_TOKEN_COOKIE_DOMAIN = None
-APP_TOKEN_COOKIE_PATH = "/"
-APP_TOKEN_COOKIE_SECURE = False
-APP_TOKEN_COOKIE_HTTPONLY = False
+JWT_SECRET_KEY = env("JWT_SECRET_KEY")
+REST_USE_JWT = True # use JSON Web Tokens
 
-# [rest_auth_settings]-[BEGIN]
-REST_AUTH = dict(
-    SESSION_LOGIN=False,
-    OLD_PASSWORD_FIELD_ENABLED=True,
-    TOKEN_CREATOR="hiddenMe.account.utils.create_token",
-    TOKEN_MODEL="knox.models.AuthToken",
-    REGISTER_SERIALIZER="hiddenMe.account.serializers.RegisterSerializer",
-    # PASSWORD_RESET_SERIALIZER="hiddenMe.account.serializers.UserPasswordResetSerializer",
-)
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    "USER_ID_FIELD": "uid",  # for the custom user model
+    "USER_ID_CLAIM": "user_id",
+    "SIGNING_KEY": JWT_SECRET_KEY
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'hiddenMe.account.serializers.UserDataSerializer'
+}
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
+    ),
+}
+
 # [rest_auth_settings]-[END]
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 1209600  # Set to your desired session duration in seconds.

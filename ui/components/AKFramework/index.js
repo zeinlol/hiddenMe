@@ -19,3 +19,7 @@ export {AKPasswordRequirement, passwordRequirements, getPasswordStrength} from '
 // [NOTIFICATIONS]-[BEGIN]
 export {AKNotificationsMain, showNotificationFailed} from './AKNotifications'
 // [VALIDATORS]-[END]
+
+// [DATA BOX]-[BEGIN]
+export {AKDataBoxDefault, } from './AKDataBox'
+// [DATA BOX]-[END]

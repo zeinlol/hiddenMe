@@ -28,6 +28,29 @@ class LoginResponseSerializer(serializers.ModelSerializer):
         )
 
 
+class UserDataSerializer(serializers.ModelSerializer):
+    """
+    Minimal User model w/o password
+    """
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret["admin"] = bool(instance.is_superuser or instance.is_staff)
+        return ret
+
+    class Meta:
+        model = UserModel
+        fields = (
+            "uid",
+            "username",
+            "email",
+        )
+        read_only_fields = (
+            "uid",
+            "email",
+        )
+
+
 class RegisterSerializer(rest_auth_serializers.RegisterSerializer):
     """Same serializer as rest_auth.registration.serializers.RegisterSerializer w/o password2 field
     remove password2 requirements and validation

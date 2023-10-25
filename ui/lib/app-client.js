@@ -1,5 +1,6 @@
 import React from 'react'
 import {showNotificationFailed} from '../components/AKFramework'
+import {getCookie} from "cookies-next";
 
 class AppClientClass extends React.Component {
   constructor() {
@@ -22,20 +23,19 @@ class AppClientClass extends React.Component {
     return await this._fetchData(url, 'PUT', formData)
   }
   async _fetchData(url, method, formData = null) {
+    const authToken = getCookie('hidden-me-auth-token')
     const options = {
       method: method,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
       },
       body: formData ? JSON.stringify(formData) : null,
+      credentials: 'include'
     }
 
     try {
-      const response = await fetch(`${this.BASE_API_URL}${url}`, options)
-      if (response.status === 401 || response.status === 403) {
-        window.location.href = '/login'
-      }
-      return response
+      return await fetch(`${this.BASE_API_URL}/api/v1/${url}`, options);
     } catch (error) {
       showNotificationFailed({ message: error })
       throw error
@@ -52,8 +52,14 @@ class AppClientClass extends React.Component {
     return response.json()
   }
   
-  async accountGetMyInfo() {
-    return await this._getRequest({url: 'account/user/'})
+  async updateAccountUserData({ formData }) {
+    const response = await this._postRequest({ url: 'account/user/', formData: formData })
+    return response.json()
+  }
+  
+  async getAccountGetMyInfo() {
+    const response = await this._getRequest({url: 'account/user/'})
+    return response.json()
   }
 }
 

@@ -17,15 +17,15 @@ urlpatterns = [
             [
                 # User management
                 path("account/", include("hiddenMe.account.urls")),
+                path("qr-codes/", include("hiddenMe.qr_code.urls")),
+                path("chat/", include("hiddenMe.chat.urls")),
+                # path("message/", include("hiddenMe.message.urls")),
                 # Rest framework
-                path("api-auth/", include("rest_framework.urls")),
-                path("ulid/", views.GenerateUlidAsUuidView.as_view()),
+                # path("api-auth/", include("rest_framework.urls")),
                 # path("public/", include("hiddenMe.public_api.urls")),
             ]
         ),
     ),
-    # password reset
-    path("", include("django.contrib.auth.urls")),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

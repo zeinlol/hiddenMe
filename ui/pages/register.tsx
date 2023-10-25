@@ -18,7 +18,7 @@ import {
   useAKStyles,
   passwordRequirements, AKInputText, getPasswordStrength,
 } from '../components/AKFramework'
-import { AppRequestClient } from '../app/app-client'
+import { AppRequestClient } from '../lib/app-client'
 
 type RegisterRequest = {
     username: string;
@@ -60,19 +60,14 @@ export default function Register() {
     if (!validEmail) {
       return
     }
-    const response = await AppRequestClient.accountRegister({ formData: registerRequest })
-    console.log('111111111111111111111111')
-    console.log(response)
-    console.log('111111111111111111111111')
-
+    await AppRequestClient.accountRegister({ formData: registerRequest })
     await AppRequestClient.accountLogIn({
       formData: {
         email: registerRequest.email,
         password: registerRequest.password1,
       },
     })
-    // await router.push('/login')
-    // router.reload()
+    window.location.reload()
   }
 
   return (
@@ -159,7 +154,7 @@ export default function Register() {
         <AKInputPassword
           label="Confirm password"
           value={registerRequest.password2}
-          error={!passwordsMatch ? 'Passwords do not match' : undefined}
+          error={passwordsMatch ? undefined : 'Passwords do not match'}
           onChange={(e) => {
             setRegisterRequest({
               ...registerRequest, password2: e.target.value,

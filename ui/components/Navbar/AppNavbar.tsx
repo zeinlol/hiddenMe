@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import { Navbar, Center, Tooltip, UnstyledButton, createStyles, Stack, rem, Image } from '@mantine/core'
+import { Navbar, Center, Tooltip, UnstyledButton, createStyles, Stack, rem } from '@mantine/core'
 import {
   IconHome2,
   IconLogout,
-  IconShirt,
+  IconQrcode,
+  IconMessages,
   IconSettings,
-  IconBoxSeam,
-  IconTimeline,
 } from '@tabler/icons-react'
 import { useRouter } from 'next/router'
+import { deleteCookie } from 'cookies-next'
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle'
 import { AppIcon } from '../Base/AppIcon'
 
@@ -35,12 +35,28 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-interface NavbarLinkProps {
-    icon: React.FC<any>;
-    label: string;
-    active?: boolean;
-    onClick?(): void;
+function logOut() {
+  deleteCookie('hidden-me-auth-token')
+  window.location.reload()
 }
+
+interface NavbarLinkProps {
+    icon: React.FC<any>
+    label: string
+    active?: boolean
+    onClick?(): void
+}
+
+const navbarTopOptions = [
+  { icon: IconHome2, label: 'Dashboard', route: '/dashboard' },
+  { icon: IconQrcode, label: 'QR Codes', route: '/qrcodes' },
+  { icon: IconMessages, label: 'Chats', route: '/chats' },
+]
+
+const navbarBottomOptions = [
+  { icon: IconSettings, label: 'Settings', route: '/settings' },
+  { icon: IconLogout, label: 'Log out', route: '/logout', onClick: () => logOut() },
+]
 
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   const { classes, cx } = useStyles()
@@ -56,16 +72,11 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
     </Tooltip>
   )
 }
-
-const navbarOptions = [
-  { icon: IconHome2, label: 'Dashboard', route: '/dashboard' },
-]
-
 export function AppNavbar() {
   const router = useRouter()
   const [_, setActive] = useState(0)
 
-  const links = navbarOptions.map((link, index) => (
+  const linksOnTop = navbarTopOptions.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
@@ -73,6 +84,21 @@ export function AppNavbar() {
       onClick={() => {
         setActive(index)
         router.push(link.route)
+      }}
+    />
+  ))
+  const linksOnBottom = navbarBottomOptions.map((link, index) => (
+    <NavbarLink
+      {...link}
+      key={link.label}
+      active={link.route.split('/')[1] === router.pathname.split('/')[1]}
+      onClick={() => {
+        setActive(index)
+        if (link.onClick !== undefined) {
+          link.onClick()
+        } else {
+          router.push(link.route)
+        }
       }}
     />
   ))
@@ -84,14 +110,13 @@ export function AppNavbar() {
       </Center>
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>
-          {links}
+          {linksOnTop}
         </Stack>
       </Navbar.Section>
       <Navbar.Section>
         <Stack justify="center" spacing={0}>
           <ColorSchemeToggle />
-          <NavbarLink icon={IconSettings} label="Settings" />
-          <NavbarLink icon={IconLogout} label="Logout" />
+          {linksOnBottom}
         </Stack>
       </Navbar.Section>
     </Navbar>

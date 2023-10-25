@@ -2,12 +2,12 @@ import { Grid } from '@mantine/core'
 import { AppLayout } from '../components/Layout/AppLayout'
 import { AKTitle } from '../components/AKFramework'
 
-export default function Chats() {
+export default function Dashboard() {
   return (
     <>
       <Grid grow p="lg">
         <Grid.Col xs={12}>
-          <AKTitle title="Chats" />
+          <AKTitle title="Dashboard" />
         </Grid.Col>
         <Grid.Col xs={12} />
       </Grid>
@@ -15,4 +15,4 @@ export default function Chats() {
   )
 }
 
-Chats.getLayout = (page: JSX.Element) => <AppLayout>{page}</AppLayout>
+Dashboard.getLayout = (page: JSX.Element) => <AppLayout>{page}</AppLayout>

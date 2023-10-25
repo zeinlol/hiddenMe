@@ -3,11 +3,11 @@ import {
   Text,
 } from '@mantine/core'
 import React, { useState } from 'react'
-import { useRouter } from 'next/router'
+import { setCookie } from 'cookies-next'
 import { AppLogo } from '../components/Base/AppLogo'
 import { AKInputText, AKInputPassword, AKButtonPrimary,
   AKTitle, AKInternalLink, useAKStyles } from '../components/AKFramework'
-import { AppRequestClient } from '../app/app-client'
+import { AppRequestClient } from '../lib/app-client'
 
 type LogInRequest = {
     username: string;
@@ -16,8 +16,6 @@ type LogInRequest = {
 
 export default function Login() {
   const { classes } = useAKStyles()
-  const router = useRouter()
-  // const { classes } = useAKStyles(theme)
 
   const [logInRequest, setLogInRequest] = useState<LogInRequest>({
     username: '',
@@ -26,9 +24,10 @@ export default function Login() {
 
   const logIn = async () => {
     try {
-      await AppRequestClient.accountLogIn({ formData: logInRequest })
-      router.push('/dashboard')
-      // window.location.reload()
+      const user_info = await AppRequestClient.accountLogIn({ formData: logInRequest })
+      console.log(user_info)
+      setCookie('hidden-me-auth-token', user_info.key, { maxAge: 60 * 60 * 24 * 30 })
+      window.location.reload()
     } catch (err) {
       console.log('login failed: ', err)
     }
