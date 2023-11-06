@@ -7,18 +7,23 @@ function QRCodesList({ items, reload }: { items: QRCodeObject[], reload: Functio
   return (
     <Container>
       <Grid justify="center">
-        {items.map((item, index) => (
-          <Grid.Col
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            xl={2}
-            key={index}
-          >
-            <QRCodeCard item={item} reload={reload}/>
-          </Grid.Col>
-        ))}
+
+        {items.length === 0 ? (
+          <p>No QR Codes yet.</p>
+        ) : (
+          items.map((item, index) => (
+            <Grid.Col
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              xl={2}
+              key={index}
+            >
+              <QRCodeCard item={item} reload={reload} />
+            </Grid.Col>
+          )))
+        }
       </Grid>
 
     </Container>

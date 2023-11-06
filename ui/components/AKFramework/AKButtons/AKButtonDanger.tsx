@@ -28,6 +28,7 @@ export function AKButtonDanger({
       mt="xl"
       size="md"
       onClick={onClick}
+      color="red"
     >
       {label}
     </Button>

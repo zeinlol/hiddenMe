@@ -84,6 +84,20 @@ class AppClientClass extends React.Component {
   async deleteQRCodeInstance({codeUid}) {
     return await this._deleteRequest({url: `qr/${codeUid}/`})
   }
+  
+  async createChat({ formData }) {
+    const response = await this._postRequest({url: 'chat/', formData: formData})
+    return response.json()
+  }
+  
+  async getChatList() {
+    const response = await this._getRequest({url: 'chat/'})
+    return response.json()
+  }
+  
+  async deleteChatInstance({chatUid}) {
+    return await this._deleteRequest({url: `chat/${chatUid}/`})
+  }
 }
 
 export const AppRequestClient = new AppClientClass({})

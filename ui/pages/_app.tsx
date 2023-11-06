@@ -2,16 +2,22 @@ import NextApp, { AppContext, AppProps } from 'next/app'
 import { getCookie, deleteCookie } from 'cookies-next'
 import Head from 'next/head'
 import { ColorScheme, ColorSchemeProvider, MantineProvider, MantineThemeOverride } from '@mantine/core'
+import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { AKNotificationsMain } from '../components/AKFramework'
 import { AppRequestClient } from '../lib/app-client'
 import '../lib/styles/global.css'
+import { unauthenticatedRoutes } from '../lib/constants/unauthenticatedRoutes'
 // noinspection LongLine
 const theme: MantineThemeOverride = {
   colors: {
+    // eslint-disable-next-line max-len
     primary: ['#b6ff99', '#bdff80', '#b0ff66', '#b8ff4d', '#3381ff', '#1a71ff', '#0061ff', '#0057e6', '#004ecc', '#0044b3'],
+    // eslint-disable-next-line max-len
     accent: ['#deffbf', '#dfffb0', '#dfffa0', '#d3ff90', '#80f2ff', '#70f1ff', '#60efff', '#56d7e6', '#4dbfcc', '#43a7b3'],
+    // eslint-disable-next-line max-len
     black: ['#a5a99d', '#919385', '#777d6d', '#606854', '#3c4d52', '#23363d', '#0b2027', '#0a1d23', '#091a1f', '#071317'],
+    // eslint-disable-next-line max-len
     white: ['#f7f7f7', '#f5f5f5', '#f3f3f3', '#f1f1f1', '#efefef', '#ededed', '#ebebeb', '#d4d4d4', '#bcbcbc', '#a5a5a5'],
     red: ['#ffb6be', '#ffa4ae', '#ff929d', '#ff808d', '#ff6d7d', '#ff5b6c', '#ff495c', '#e64253', '#cc3a4a', '#b33340'],
   },
@@ -30,13 +36,6 @@ const AuthProvider = ({
     document.location.href = '/dashboard'
   }
 
-  const unauthenticatedRoutes = [
-    '/login',
-    '/register',
-    '/forgot-password',
-    '/chats',
-  ]
-
   const authSuccess = () => {
     if (document.location.pathname === '/login') {
       redirectAuthenticated()
@@ -48,7 +47,12 @@ const AuthProvider = ({
   const authFailure = () => {
     deleteCookie('hidden-me-auth-token')
     // only redirect to log in if we're not already on an unauthenticated route
-    if (!unauthenticatedRoutes.includes(document.location.pathname)) {
+    const isPathInList = unauthenticatedRoutes.some(route => {
+      const regex = new RegExp(`^${route}$`)
+      return regex.test(document.location.pathname)
+    })
+    console.log(isPathInList)
+    if (!isPathInList) {
       document.location.href = '/login'
       setReady(true)
     }
@@ -101,6 +105,8 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme)
 
+  const router = useRouter()
+
   const setupInProgress = useRef(false)
 
   const toggleColorScheme = (value?: ColorScheme) => {
@@ -108,6 +114,9 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
     setColorScheme(nextColorScheme)
   }
   useEffect(() => {
+    if (router.pathname === '/') {
+      router.push('/dashboard').then()
+    }
     if (setupInProgress.current) {
       return
     }
@@ -122,7 +131,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         toggleColorScheme('light')
       }
     }
-  }, [])
+  }, [router.pathname])
 
   const getLayout = (Component as any).getLayout || ((page: any) => page)
 

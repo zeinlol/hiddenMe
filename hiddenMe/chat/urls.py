@@ -10,7 +10,7 @@ urlpatterns = [
             [
                 path("", views.ChatsDataView.as_view(), ),
                 path(
-                    "<uuid:qr_uid>/",
+                    "<uuid:chat_uid>/",
                     include(
                         [
                             path("", views.ChatInstanceView.as_view(), ),

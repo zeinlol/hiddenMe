@@ -1,1 +1,1 @@
-from .caht_item import ChatInstanceSerializer
+from .chat_item import ChatInstanceSerializer
