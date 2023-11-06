@@ -1,9 +1,13 @@
 import {
   Paper,
 } from '@mantine/core'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 
-export function AKDataBoxDefault(): ReactElement {
+interface AKDataBoxDefaultProps {
+  children?: ReactNode; // Define children prop
+}
+
+export function AKDataBoxDefault({ children }: AKDataBoxDefaultProps): ReactElement {
   return (
     <Paper
       withBorder
@@ -11,7 +15,7 @@ export function AKDataBoxDefault(): ReactElement {
       radius="md"
       w="100%"
     >
-      <slot />
+      {children}
     </Paper>
   )
 }

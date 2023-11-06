@@ -17,7 +17,7 @@ urlpatterns = [
             [
                 # User management
                 path("account/", include("hiddenMe.account.urls")),
-                path("qr-codes/", include("hiddenMe.qr_code.urls")),
+                path("qr/", include("hiddenMe.qr_code.urls")),
                 path("chat/", include("hiddenMe.chat.urls")),
                 # path("message/", include("hiddenMe.message.urls")),
                 # Rest framework

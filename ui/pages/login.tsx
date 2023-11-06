@@ -25,7 +25,6 @@ export default function Login() {
   const logIn = async () => {
     try {
       const user_info = await AppRequestClient.accountLogIn({ formData: logInRequest })
-      console.log(user_info)
       setCookie('hidden-me-auth-token', user_info.key, { maxAge: 60 * 60 * 24 * 30 })
       window.location.reload()
     } catch (err) {

@@ -5,7 +5,7 @@ import { ColorScheme, ColorSchemeProvider, MantineProvider, MantineThemeOverride
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { AKNotificationsMain } from '../components/AKFramework'
 import { AppRequestClient } from '../lib/app-client'
-
+import '../lib/styles/global.css'
 // noinspection LongLine
 const theme: MantineThemeOverride = {
   colors: {
@@ -61,6 +61,11 @@ const AuthProvider = ({
         return
       }
       loading.current = true
+      const authToken = getCookie('hidden-me-auth-token')
+      if (authToken === '' || authToken === null || typeof authToken === 'undefined') {
+        authFailure()
+        return
+      }
       let userUUID = localStorage.getItem('userUUID') || ''
       // maybe we have the access token, but we're missing the userUUID from localStorage
       if (userUUID === '') {

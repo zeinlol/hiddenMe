@@ -22,13 +22,22 @@ class AppClientClass extends React.Component {
   async _putRequest({ url, formData }) {
     return await this._fetchData(url, 'PUT', formData)
   }
+
+  async _deleteRequest({ url }) {
+    return await this._fetchData(url, 'DELETE')
+  }
+  
   async _fetchData(url, method, formData = null) {
     const authToken = getCookie('hidden-me-auth-token')
+    // if (authToken === '' || authToken === null || typeof authToken === 'undefined') {
+    //   window.location.reload()
+    // }
     const options = {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`
+        'Authorization': `Bearer ${authToken}`,
+        'X-CSRFToken': getCookie('csrftoken')
       },
       body: formData ? JSON.stringify(formData) : null,
       credentials: 'include'
@@ -60,6 +69,20 @@ class AppClientClass extends React.Component {
   async getAccountGetMyInfo() {
     const response = await this._getRequest({url: 'account/user/'})
     return response.json()
+  }
+  
+  async createQRCode({ formData }) {
+    const response = await this._postRequest({url: 'qr/new/', formData: formData})
+    return response.json()
+  }
+  
+  async getQRCodeList() {
+    const response = await this._getRequest({url: 'qr/'})
+    return response.json()
+  }
+  
+  async deleteQRCodeInstance({codeUid}) {
+    return await this._deleteRequest({url: `qr/${codeUid}/`})
   }
 }
 

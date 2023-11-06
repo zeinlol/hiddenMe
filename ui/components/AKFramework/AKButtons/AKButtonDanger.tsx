@@ -4,10 +4,10 @@ import {
 import React, { ReactElement } from 'react'
 import { AKButtonProps } from './props'
 
-const DEFAULT_LABEL = 'Submit'
-const DEFAULT_BUTTON_TYPE = 'submit'
+const DEFAULT_LABEL = 'Delete'
+const DEFAULT_BUTTON_TYPE = 'reset'
 
-export function AKButtonPrimary({
+export function AKButtonDanger({
   label = DEFAULT_LABEL,
   type = DEFAULT_BUTTON_TYPE,
   leftIcon = null,

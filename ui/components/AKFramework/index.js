@@ -2,7 +2,7 @@
 export {useAKStyles} from './AKStyle/AKMainStyle'
 export {AKTitle} from './AKText/AKTitle'
 
-export {AKButtonPrimary} from './AKButtons/AKButtonPrimary'
+export {AKButtonPrimary, AKButtonDanger} from './AKButtons'
 
 // [INPUT]-[BEGIN]
 export {AKInputEmail, AKInputPassword, AKInputText, AKInputPinNumber} from './AKInput'
@@ -22,4 +22,8 @@ export {AKNotificationsMain, showNotificationFailed} from './AKNotifications'
 
 // [DATA BOX]-[BEGIN]
 export {AKDataBoxDefault, } from './AKDataBox'
+// [DATA BOX]-[END]
+
+// [MODAL]-[BEGIN]
+export {AKModal, } from './AKModal'
 // [DATA BOX]-[END]

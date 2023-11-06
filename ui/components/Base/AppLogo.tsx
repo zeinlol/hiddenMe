@@ -3,6 +3,7 @@ import {
   Title,
   Image,
   Flex,
+  Paper,
   MantineTheme,
 } from '@mantine/core'
 
@@ -21,15 +22,15 @@ export function AppLogo() {
       gap="md"
       justify="flex-center"
       align="center"
-      direction="row"
+      direction="column"
       wrap="wrap"
     >
       <Image
-        src="/logo.svg"
+        src="/logo.png"
         alt="hiddenMe logo"
         fit="contain"
-        width={42}
-        height={42}
+        width={150}
+        height={150}
       />
       <Title
         order={2}

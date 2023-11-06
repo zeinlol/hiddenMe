@@ -1,6 +1,8 @@
 import qrcode
+from qrcode.image.pil import PilImage
 
-def generate_qr_code_image(value):
+
+def generate_qr_code_image(value) -> PilImage:
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,

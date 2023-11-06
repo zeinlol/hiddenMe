@@ -5,11 +5,11 @@ import {
 export function AppIcon() {
   return (
     <Image
-      src="/logo.svg"
+      src="/logo.png"
       alt="hiddenMe logo"
       fit="contain"
-      width={42}
-      height={42}
+      width={50}
+      height={50}
     />
   )
 }
