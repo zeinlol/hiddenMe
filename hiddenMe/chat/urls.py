@@ -14,7 +14,14 @@ urlpatterns = [
                     include(
                         [
                             path("", views.ChatInstanceView.as_view(), ),
-                            path("messages/", include([]), ),
+                            path(
+                                "messages/",
+                                include(
+                                    [
+                                        path("", views.GetChatMessagesView.as_view(), ),
+                                    ]
+                                ),
+                            ),
                         ]
                     ),
                 ),

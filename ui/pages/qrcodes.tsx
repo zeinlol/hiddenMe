@@ -19,21 +19,19 @@ export default function QRCodes() {
     fetchData().then()
   }, [])
   return (
-    <>
-      <Grid grow p="lg">
-        <Grid.Col xs={12}>
-          <AKTitle title="QR Codes" />
-        </Grid.Col>
-        <Grid.Col>
-          <QRCodeNew update={fetchData} />
-        </Grid.Col>
-        <Grid.Col>
-          <AKDataBoxDefault>
-            <QRCodesList items={QRList} reload={fetchData} />
-          </AKDataBoxDefault>
-        </Grid.Col>
-      </Grid>
-    </>
+    <Grid grow p="lg">
+      <Grid.Col xs={12}>
+        <AKTitle title="QR Codes" />
+      </Grid.Col>
+      <Grid.Col>
+        <QRCodeNew update={fetchData} />
+      </Grid.Col>
+      <Grid.Col>
+        <AKDataBoxDefault>
+          <QRCodesList items={QRList} reload={fetchData} />
+        </AKDataBoxDefault>
+      </Grid.Col>
+    </Grid>
   )
 }
 

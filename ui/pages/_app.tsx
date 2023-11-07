@@ -51,7 +51,6 @@ const AuthProvider = ({
       const regex = new RegExp(`^${route}$`)
       return regex.test(document.location.pathname)
     })
-    console.log(isPathInList)
     if (!isPathInList) {
       document.location.href = '/login'
       setReady(true)

@@ -18,20 +18,18 @@ export default function Chats() {
     fetchData().then()
   }, [])
   return (
-    <>
-      <Grid grow p="lg">
-        <Grid.Col xs={12}>
-          <AKTitle title="Chats" />
+    <Grid grow p="lg">
+      <Grid.Col xs={12}>
+        <AKTitle title="Chats" />
+      </Grid.Col>
+      <Grid.Col xs={12}>
+        <Grid.Col>
+          <AKDataBoxDefault>
+            <ChatsList items={ChatElementList} reload={fetchData} />
+          </AKDataBoxDefault>
         </Grid.Col>
-        <Grid.Col xs={12}>
-          <Grid.Col>
-            <AKDataBoxDefault>
-              <ChatsList items={ChatElementList} reload={fetchData} />
-            </AKDataBoxDefault>
-          </Grid.Col>
-        </Grid.Col>
-      </Grid>
-    </>
+      </Grid.Col>
+    </Grid>
   )
 }
 

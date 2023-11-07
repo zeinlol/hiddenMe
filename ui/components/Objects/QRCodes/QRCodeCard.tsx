@@ -1,6 +1,6 @@
 import { Card, Image, Text } from '@mantine/core'
 import { QRCodeObject } from '../../../lib/classes/QRCode'
-import { AKButtonDanger, AKTitle } from '../../AKFramework'
+import { AKButtonDanger, AKButtonPrimary, AKTitle } from '../../AKFramework'
 import { AppRequestClient } from '../../../lib/app-client'
 
 async function deleteQRCode({ item, reload }: { item: QRCodeObject, reload: Function }) {
@@ -11,7 +11,9 @@ async function deleteQRCode({ item, reload }: { item: QRCodeObject, reload: Func
   await AppRequestClient.deleteQRCodeInstance({ codeUid: item.uid })
   reload()
 }
-
+async function openQRCode({ item }: { item: QRCodeObject }) {
+  document.location.href = `/qr-codes/${item.uid}/`
+}
 export function QRCodeCard({ item, reload }: { item: QRCodeObject, reload: Function }) {
   return (
     <Card
@@ -37,6 +39,7 @@ export function QRCodeCard({ item, reload }: { item: QRCodeObject, reload: Funct
             { item.description }
           </Text>
       }
+      <AKButtonPrimary label="Review" onClick={() => openQRCode({ item })} />
       <AKButtonDanger onClick={() => deleteQRCode({ item, reload })} />
 
     </Card>

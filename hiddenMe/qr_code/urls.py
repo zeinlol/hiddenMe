@@ -16,7 +16,7 @@ urlpatterns = [
                     include(
                         [
                             path("", views.CodeInstanceChats.as_view(), ),
-                            # path("new/", views.CodeInstanceNewChat.as_view(), ),
+                            path("new-chat/", views.CreateQRCodeChatInstanceView.as_view(), ),
                         ]
                     ),
                 ),

@@ -3,25 +3,20 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import register_converter, path, include
 from django.views import defaults as default_views
-from hiddenMe.base import converters, views
+from hiddenMe.base import converters
 
 register_converter(converters.UlidConverter, "ulid")
 
-# noinspection PyUnresolvedReferences
 urlpatterns = [
-    # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     path(
         "api/v1/",
         include(
             [
-                # User management
                 path("account/", include("hiddenMe.account.urls")),
                 path("qr/", include("hiddenMe.qr_code.urls")),
                 path("chat/", include("hiddenMe.chat.urls")),
-                # path("message/", include("hiddenMe.message.urls")),
-                # Rest framework
-                # path("api-auth/", include("rest_framework.urls")),
+                path("message/", include("hiddenMe.message.urls")),
                 # path("public/", include("hiddenMe.public_api.urls")),
             ]
         ),

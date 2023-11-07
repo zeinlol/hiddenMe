@@ -32,14 +32,20 @@ class AppClientClass extends React.Component {
     // if (authToken === '' || authToken === null || typeof authToken === 'undefined') {
     //   window.location.reload()
     // }
+    const CSRFToken= getCookie('csrftoken')
+    let headers = {
+        'Content-Type': 'application/json',
+      
+        'Authorization': `Bearer ${authToken}`,
+        'X-CSRFToken': CSRFToken || 'none',
+    }
+    // if (CSRFToken) {
+    //   headers['X-CSRFToken'] = CSRFToken
+    // }
     const options = {
       method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-        'X-CSRFToken': getCookie('csrftoken')
-      },
       body: formData ? JSON.stringify(formData) : null,
+      headers: headers,
       credentials: 'include'
     }
 
@@ -85,8 +91,8 @@ class AppClientClass extends React.Component {
     return await this._deleteRequest({url: `qr/${codeUid}/`})
   }
   
-  async createChat({ formData }) {
-    const response = await this._postRequest({url: 'chat/', formData: formData})
+  async createChat({ codeUid, formData }) {
+    const response = await this._postRequest({url: `qr/${codeUid}/chats/new-chat/`, formData: formData})
     return response.json()
   }
   
@@ -95,8 +101,18 @@ class AppClientClass extends React.Component {
     return response.json()
   }
   
+  async getChatInstance({chatUid}) {
+    const response = await this._getRequest({url: `chat/${chatUid}/`})
+    return response.json()
+  }
+  
   async deleteChatInstance({chatUid}) {
     return await this._deleteRequest({url: `chat/${chatUid}/`})
+  }
+  
+  async getChatMessages({chatUid}) {
+    const response = await this._getRequest({url: `chat/${chatUid}/messages/`})
+    return response.json()
   }
 }
 

@@ -10,7 +10,7 @@ export default function NewChatPage() {
 
   return (
     <div>
-      <h1>Chat Page</h1>
+      <h1>QR Code page</h1>
       <p>Dynamic Code: {codeUid}</p>
       {/* Add your chat functionality here */}
     </div>

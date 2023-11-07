@@ -9,14 +9,6 @@ from hiddenMe.qr_code.models import QRCode
 
 
 class Chat(UidAsPrimaryMixin, TitleDescriptionModelMixin, models.Model):
-    user = models.ForeignKey(
-        to=User,
-        on_delete=models.CASCADE,
-        null=False,
-        blank=False,
-        related_name=_("chats_set")
-    )
-
     qr_code = models.ForeignKey(
         QRCode,
         models.CASCADE,
@@ -26,4 +18,4 @@ class Chat(UidAsPrimaryMixin, TitleDescriptionModelMixin, models.Model):
     )
 
     def __str__(self) -> str:
-        return f"{self.user}: {self.title}"
+        return f"{self.qr_code}: {self.title}"
