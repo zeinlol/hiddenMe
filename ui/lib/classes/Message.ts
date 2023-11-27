@@ -1,7 +1,8 @@
 export type MessageObject = {
   uid: string;
   user: string;
-  title: string;
-  description?: string | null;
-  icon?: string | null;
+  chat: string;
+  text: string;
+  created_at: string;
+  modified_at: string;
 }

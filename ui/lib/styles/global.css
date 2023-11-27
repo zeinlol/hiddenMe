@@ -1,3 +1,30 @@
 .qr-code-card{
     max-width: 15em;
+    min-width: 10em;
+}
+
+.message-data-box {
+  max-width: 40%;
+  margin-bottom: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1.2em;
+  color: #606060;
+}
+
+.message-data-box.personal {
+  background-color: #aed8ff;
+  text-align: right;
+  margin-left: auto;
+}
+
+.message-data-box:not(.personal) {
+  background-color: #bbbbbb;
+  text-align: left;
+  margin-right: auto;
+}
+
+.messages-list-box {
+  max-height: 50vh;
+  overflow-y: scroll;
 }

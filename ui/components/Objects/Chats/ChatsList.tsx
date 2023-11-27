@@ -14,9 +14,9 @@ function ChatsList({ items, reload }: { items: ChatObject[], reload: Function })
             <Grid.Col
               xs={12}
               sm={12}
-              md={6}
-              lg={6}
-              xl={6}
+              md={4}
+              lg={3}
+              xl={2}
               key={index}
             >
               <ChatCard item={item} reload={reload} />

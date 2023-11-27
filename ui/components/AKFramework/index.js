@@ -5,7 +5,7 @@ export {AKTitle} from './AKText/AKTitle'
 export {AKButtonPrimary, AKButtonDanger} from './AKButtons'
 
 // [INPUT]-[BEGIN]
-export {AKInputEmail, AKInputPassword, AKInputText, AKInputPinNumber} from './AKInput'
+export {AKInputEmail, AKInputPassword, AKInputText, AKInputPinNumber, AKInputTextArea} from './AKInput'
 // [INPUT]-[END]
 
 // [LINKS]-[BEGIN]

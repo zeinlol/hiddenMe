@@ -15,7 +15,6 @@ class UserView(generics.RetrieveAPIView):
     serializer_class = serializers.UserDataSerializer
     permission_classes = (
         permissions.IsAuthenticated,
-        # TokenHasReadWriteScope,
     )
 
     def get_object(self):

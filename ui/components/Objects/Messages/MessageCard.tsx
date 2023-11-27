@@ -1,16 +1,16 @@
-import { Card } from '@mantine/core'
+import { Card, Text } from '@mantine/core'
 import { MessageObject } from '../../../lib/classes/Message'
-import { AKButtonPrimary } from '../../AKFramework'
 
-export function MessageCard({ item, reload }: { item: MessageObject, reload: Function }) {
+export function MessageCard({ item }: { item: MessageObject }) {
+  const userUUID = localStorage.getItem('userUUID')
+  console.log(userUUID)
   return (
     <Card
       withBorder
       padding="lg"
-      className="qr-code-card"
+      className={`message-data-box ${item.user === userUUID ? 'personal' : ''}`}
     >
-      {{ item }}
-      <AKButtonPrimary label="Review" onClick={() => reload()} />
+      <Text>{item.text}</Text>
     </Card>
   )
 }

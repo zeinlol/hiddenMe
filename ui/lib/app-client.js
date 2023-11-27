@@ -29,9 +29,6 @@ class AppClientClass extends React.Component {
   
   async _fetchData(url, method, formData = null) {
     const authToken = getCookie('hidden-me-auth-token')
-    // if (authToken === '' || authToken === null || typeof authToken === 'undefined') {
-    //   window.location.reload()
-    // }
     const CSRFToken= getCookie('csrftoken')
     let headers = {
         'Content-Type': 'application/json',
@@ -77,6 +74,11 @@ class AppClientClass extends React.Component {
     return response.json()
   }
   
+  async getAccountDashboard() {
+    const response = await this._getRequest({url: 'account/dashboard/'})
+    return response.json()
+  }
+  
   async createQRCode({ formData }) {
     const response = await this._postRequest({url: 'qr/new/', formData: formData})
     return response.json()
@@ -91,8 +93,18 @@ class AppClientClass extends React.Component {
     return await this._deleteRequest({url: `qr/${codeUid}/`})
   }
   
+  async getQRCodeInstance({codeUid}) {
+    const response = await this._getRequest({url: `qr/${codeUid}/`})
+    return response.json()
+  }
+  
   async createChat({ codeUid, formData }) {
     const response = await this._postRequest({url: `qr/${codeUid}/chats/new-chat/`, formData: formData})
+    return response.json()
+  }
+  
+  async getQRCodeChatList({ codeUid }) {
+    const response = await this._getRequest({url: `qr/${codeUid}/chats/`})
     return response.json()
   }
   
@@ -112,6 +124,11 @@ class AppClientClass extends React.Component {
   
   async getChatMessages({chatUid}) {
     const response = await this._getRequest({url: `chat/${chatUid}/messages/`})
+    return response.json()
+  }
+  
+  async postNewMessageInChat({chatUid, formData}) {
+    const response = await this._postRequest({url: `chat/${chatUid}/messages/`, formData: formData})
     return response.json()
   }
 }
