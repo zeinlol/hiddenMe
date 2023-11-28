@@ -7,6 +7,7 @@ import { QRCodeObject } from '../../../lib/classes/QRCode'
 import { AKTitle } from '../../../components/AKFramework'
 import { AppRequestClient } from '../../../lib/app-client'
 import { ChatObject } from '../../../lib/classes/Chat'
+import { QRCodeOrderButton } from '../../../components/Objects/QRCodes/QRCodeOrderButton'
 
 export default function NewChatPage() {
   const router = useRouter()
@@ -39,6 +40,7 @@ export default function NewChatPage() {
           { qrCodeData.description }
         </Text>
       }
+      {qrCodeData ? <QRCodeOrderButton item={qrCodeData} /> : ''}
       <ChatsList items={ChatList} reload={fetchQRCodeChatList} />
     </div>
   )

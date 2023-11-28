@@ -2,6 +2,7 @@ import { Card, Image, Text } from '@mantine/core'
 import { QRCodeObject } from '../../../lib/classes/QRCode'
 import { AKButtonDanger, AKButtonPrimary, AKTitle } from '../../AKFramework'
 import { AppRequestClient } from '../../../lib/app-client'
+import { QRCodeOrderButton } from './QRCodeOrderButton'
 
 async function deleteQRCode({ item, reload }: { item: QRCodeObject, reload: Function }) {
   const answer = window.confirm(`Are you sure want to delete QR Code "${item.title}"?`)
@@ -40,6 +41,7 @@ export function QRCodeCard({ item, reload }: { item: QRCodeObject, reload: Funct
           </Text>
       }
       <AKButtonPrimary label="Review" onClick={() => openQRCode({ item })} />
+      <QRCodeOrderButton item={item} />
       <AKButtonDanger onClick={() => deleteQRCode({ item, reload })} />
 
     </Card>
