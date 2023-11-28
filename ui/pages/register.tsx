@@ -7,6 +7,7 @@ import {
   Progress, em,
 } from '@mantine/core'
 import React, { useState } from 'react'
+import { setCookie } from 'cookies-next'
 import { AppLogo } from '../components/Base/AppLogo'
 import {
   AKPasswordRequirement,
@@ -61,12 +62,13 @@ export default function Register() {
       return
     }
     await AppRequestClient.accountRegister({ formData: registerRequest })
-    await AppRequestClient.accountLogIn({
+    const user_info = await AppRequestClient.accountLogIn({
       formData: {
         email: registerRequest.email,
         password: registerRequest.password1,
       },
     })
+    setCookie('hidden-me-auth-token', user_info.key, { maxAge: 60 * 60 * 24 * 30 })
     window.location.reload()
   }
 

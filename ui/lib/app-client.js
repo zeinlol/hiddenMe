@@ -69,6 +69,10 @@ class AppClientClass extends React.Component {
     return response.json()
   }
   
+  async deleteAccount({userUid}) {
+    await this._deleteRequest({ url: `account/${userUid}/`})
+  }
+  
   async getAccountGetMyInfo() {
     const response = await this._getRequest({url: 'account/user/'})
     return response.json()
