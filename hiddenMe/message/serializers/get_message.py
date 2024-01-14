@@ -4,6 +4,9 @@ from hiddenMe.message import models
 
 
 class GetMessageInstanceSerializer(serializers.ModelSerializer):
+    uid = serializers.CharField(read_only=True)
+    user = serializers.CharField(source='user_id', read_only=True)
+    chat = serializers.CharField(source='chat_id', read_only=True)
 
     class Meta:
         model = models.Message

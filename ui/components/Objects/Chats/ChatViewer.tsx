@@ -4,7 +4,6 @@ import { ChatObject } from '../../../lib/classes/Chat'
 import { AppRequestClient } from '../../../lib/app-client'
 import { MessageObject } from '../../../lib/classes/Message'
 import { MessagesList } from '../Messages/MessagesList'
-import { NewMessageForm } from '../Messages/NewMessageForm'
 
 export function ChatViewer({ chat }: { chat: ChatObject }) {
   const [messageList, setMessageList] = useState<MessageObject[]>([])
@@ -19,7 +18,6 @@ export function ChatViewer({ chat }: { chat: ChatObject }) {
   return (
     <Paper withBorder>
       <MessagesList messages={messageList} />
-      <NewMessageForm chatUid={chat.uid} reload={fetchData} />
     </Paper>
   )
 }

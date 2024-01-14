@@ -1,20 +1,17 @@
 import { useRouter } from 'next/router'
 import { Card } from '@mantine/core'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { AppLayoutNotAuthorized } from '../../../components/Layout/AppLayoutNotAuthorized'
 import { AKTitle } from '../../../components/AKFramework'
-import { ChatViewer } from '../../../components/Objects/Chats/ChatViewer'
 import { AppRequestClient } from '../../../lib/app-client'
-import { ChatObject } from '../../../lib/classes/Chat'
 
 export default function NewChatPage() {
   const router = useRouter()
   const { codeUid } = router.query
-  const [chatData, setChatData] = useState<ChatObject>()
 
   const fetchData = async () => {
-    const data = await AppRequestClient.createChat({ codeUid, formData: { title: 'Unknown new chat' } })
-    setChatData(data)
+    const data = await AppRequestClient.createChat({ codeUid, formData: { title: 'New chat' } })
+    router.push(`/chat/${data.uid}/chat-room`).then()
   }
 
   useEffect(() => {
@@ -26,8 +23,7 @@ export default function NewChatPage() {
       padding="lg"
     >
       <AKTitle title="New Chat" />
-      {chatData ? <ChatViewer chat={chatData} /> : <AKTitle title="Please try again later" />}
-
+      Please wait to be redirected to new chat room
     </Card>
   )
 }

@@ -38,7 +38,6 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_EMAIL_REQUIRED = False
 SITE_ID = 1
 
-
 DEBUG = env("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = []
@@ -72,6 +71,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'channels',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -110,6 +110,16 @@ ROOT_URLCONF = "config.urls"
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        # 'BACKEND': "channels.layers.InMemoryChannelLayer"
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(env("REDIS_URL"), env("REDIS_PORT"))],
+        },
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -194,7 +204,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 JWT_SECRET_KEY = env("JWT_SECRET_KEY")
-REST_USE_JWT = True # use JSON Web Tokens
+REST_USE_JWT = True  # use JSON Web Tokens
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),

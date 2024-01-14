@@ -10,7 +10,6 @@ sys.path.append(os.path.join(app_path, "hiddenMe"))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.base")
 asgi_application = get_asgi_application()
 
-# Import after everything is initiated
 import hiddenMe.chat.routing
 
 application = ProtocolTypeRouter({

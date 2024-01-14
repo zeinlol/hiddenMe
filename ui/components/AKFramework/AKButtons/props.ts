@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import React from 'react'
 
 export interface AKButtonProps {
   label?: string
@@ -8,7 +8,7 @@ export interface AKButtonProps {
   isFullWidth?: boolean
   loading?: boolean
   disabled?: boolean
-  onClick: MouseEventHandler
+  onClick?: () => void
     // /** Set text-transform to uppercase */
     // uppercase?: boolean;
     // /** Reduces vertical and horizontal spacing */

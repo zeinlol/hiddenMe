@@ -41,19 +41,20 @@ export default function Login() {
       >
         <AppLogo />
         <AKTitle title="Log In" />
-        <AKInputText
-          label="Username or email"
-          placeholder="my_user_name or example@mail.com"
-          onChange={(e) => {
-            setLogInRequest({ ...logInRequest, username: e.target.value })
+        <form>
+          <AKInputText
+            label="Username or email"
+            placeholder="my_user_name or example@mail.com"
+            onChange={(e) => {
+              setLogInRequest({ ...logInRequest, username: e.target.value })
+            }}
+          />
+          <AKInputPassword onChange={(e) => {
+            setLogInRequest({ ...logInRequest, password: e.target.value })
           }}
-        />
-        <AKInputPassword onChange={(e) => {
-          setLogInRequest({ ...logInRequest, password: e.target.value })
-        }}
-        />
-        <AKButtonPrimary label="Login" onClick={() => logIn()} />
-
+          />
+          <AKButtonPrimary label="Login" onClick={() => logIn()} />
+        </form>
         <Text ta="center" mt="md">
                     Don&apos;t have an account?{' '}
           <AKInternalLink
