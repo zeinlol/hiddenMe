@@ -9,7 +9,7 @@ export {AKInputEmail, AKInputPassword, AKInputText, AKInputPinNumber, AKInputTex
 // [INPUT]-[END]
 
 // [LINKS]-[BEGIN]
-export {AKInternalLink} from './AKLinks'
+export {AKInternalLink, AKExternalLink} from './AKLinks'
 // [LINKS]-[END]
 
 // [VALIDATORS]-[BEGIN]

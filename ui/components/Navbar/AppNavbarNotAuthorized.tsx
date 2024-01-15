@@ -2,8 +2,13 @@ import React from 'react'
 import {
   IconLogin,
   IconUserPlus,
+  IconBrandOffice,
 } from '@tabler/icons-react'
 import { AppNavbarBase } from './AppNavbarBase'
+
+const navbarTopOptions = [
+  { icon: IconBrandOffice, label: 'Terms and conditions', route: '/terms-and-conditions' },
+]
 
 const navbarBottomOptions = [
   { icon: IconLogin, label: 'Log in', route: '/login' },
@@ -11,7 +16,7 @@ const navbarBottomOptions = [
 ]
 
 const navbarOptions = {
-  topOptions: [],
+  topOptions: navbarTopOptions,
   bottomOptions: navbarBottomOptions,
 }
 

@@ -24,9 +24,10 @@ export default function Login() {
 
   const logIn = async () => {
     try {
-      const user_info = await AppRequestClient.accountLogIn({ formData: logInRequest })
-      setCookie('hidden-me-auth-token', user_info.key, { maxAge: 60 * 60 * 24 * 30 })
-      window.location.reload()
+      const userInfo = await AppRequestClient.accountLogIn({ formData: logInRequest })
+      console.log(userInfo)
+      setCookie('hidden-me-auth-token', userInfo.key, { maxAge: 60 * 60 * 24 * 30 })
+      document.location.href = '/dashboard'
     } catch (err) {
       console.log('login failed: ', err)
     }
@@ -60,6 +61,12 @@ export default function Login() {
           <AKInternalLink
             href="/register"
             label="Register"
+          />
+        </Text>
+        <Text ta="center" mt="md">
+          <AKInternalLink
+            href="/terms-and-conditions"
+            label="Terms and conditions"
           />
         </Text>
       </Paper>

@@ -5,6 +5,7 @@ import {
   IconQrcode,
   IconMessages,
   IconSettings,
+  IconFileText,
 } from '@tabler/icons-react'
 import { deleteCookie } from 'cookies-next'
 import { AppNavbarBase } from './AppNavbarBase'
@@ -22,6 +23,7 @@ const navbarTopOptions = [
 
 const navbarBottomOptions = [
   { icon: IconSettings, label: 'Settings', route: '/settings' },
+  { icon: IconFileText, label: 'Terms and conditions', route: '/terms-and-conditions' },
   { icon: IconLogout, label: 'Log out', route: '/logout', onClick: () => logOut() },
 ]
 

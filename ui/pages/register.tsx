@@ -176,6 +176,12 @@ export default function Register() {
             label="Log In"
           />
         </Text>
+        <Text ta="center" mt="md">
+          <AKInternalLink
+            href="/terms-and-conditions"
+            label="Terms and conditions"
+          />
+        </Text>
       </Paper>
     </div>
   )

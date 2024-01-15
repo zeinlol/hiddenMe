@@ -36,9 +36,6 @@ class AppClientClass extends React.Component {
         'Authorization': `Bearer ${authToken}`,
         'X-CSRFToken': CSRFToken || 'none',
     }
-    // if (CSRFToken) {
-    //   headers['X-CSRFToken'] = CSRFToken
-    // }
     const options = {
       method: method,
       body: formData ? JSON.stringify(formData) : null,
