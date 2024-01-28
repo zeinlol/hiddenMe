@@ -8,7 +8,7 @@ export interface AKButtonProps {
   isFullWidth?: boolean
   loading?: boolean
   disabled?: boolean
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
     // /** Set text-transform to uppercase */
     // uppercase?: boolean;
     // /** Reduces vertical and horizontal spacing */
