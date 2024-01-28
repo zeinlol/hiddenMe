@@ -4,7 +4,7 @@ import { AKButtonDanger, AKButtonPrimary, AKTitle } from '../../AKFramework'
 import { deleteChat } from './mixins'
 
 async function openChat({ item }: { item: ChatObject }) {
-  document.location.href = `/chat/${item.uid}/`
+  document.location.href = `/chat/${item.uid}/chat-room`
 }
 
 export function ChatCard({ item, reload }: { item: ChatObject, reload: Function }) {
