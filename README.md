@@ -1,4 +1,4 @@
-# WebChat App
+# hiddenMe WebChat App
 
 ## Overview
 
@@ -57,7 +57,7 @@ npm run start
  
 ```
 
-Visit [http://localhost:8000/](http://localhost:8000/) in your browser to access the application.
+Visit [http://localhost:3000/](http://localhost:3000/) in your browser to access the application.
 
 ## Contribution Guidelines
 
