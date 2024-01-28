@@ -1,10 +1,10 @@
 import NextApp, { AppContext, AppProps } from 'next/app'
-import { getCookie, deleteCookie } from 'cookies-next'
+import { deleteCookie, getCookie } from 'cookies-next'
 import Head from 'next/head'
 import { ColorScheme, ColorSchemeProvider, MantineProvider, MantineThemeOverride } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
-import { AKNotificationsMain } from '../components/AKFramework'
 import { AppRequestClient } from '../lib/app-client'
 import '../lib/styles/global.css'
 import { unauthenticatedRoutes } from '../lib/constants/unauthenticatedRoutes'
@@ -149,7 +149,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             withGlobalStyles
             withNormalizeCSS
           >
-            <AKNotificationsMain />
+            <Notifications />
             {getLayout(<Component {...pageProps} />)}
           </MantineProvider>
         </ColorSchemeProvider>

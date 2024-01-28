@@ -40,7 +40,7 @@ SITE_ID = 1
 
 DEBUG = env("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 
 # Application definition
 
@@ -187,9 +187,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PUBLIC_SITE_URL = env.str("PUBLIC_SITE_URL", "http://localhost/")
 
 AUTH_USER_MODEL = 'hidden_me_account.User'
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+CORS_ALLOWED_ORIGINS = ['*']
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", False)
 CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ALLOW_ALL_ORIGINS", False)

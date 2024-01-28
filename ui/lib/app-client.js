@@ -32,9 +32,12 @@ class AppClientClass extends React.Component {
     const CSRFToken= getCookie('csrftoken')
     let headers = {
         'Content-Type': 'application/json',
-      
-        'Authorization': `Bearer ${authToken}`,
-        'X-CSRFToken': CSRFToken || 'none',
+        'Connection': 'keep-alive',
+        'Accept': '*/*',
+        // 'X-CSRFToken': CSRFToken || 'none',
+    }
+    if (typeof authToken !== "undefined") {
+      headers.Authorization = `Bearer ${authToken}`
     }
     const options = {
       method: method,
@@ -42,11 +45,10 @@ class AppClientClass extends React.Component {
       headers: headers,
       credentials: 'include'
     }
-
     try {
       return await fetch(`${this.BASE_API_URL}/api/v1/${url}`, options);
     } catch (error) {
-      showNotificationFailed({ message: error })
+      showNotificationFailed({ message: error.toString() })
       throw error
     }
   }

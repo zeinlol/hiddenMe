@@ -5,8 +5,10 @@ import {
 import React, { useState } from 'react'
 import { setCookie } from 'cookies-next'
 import { AppLogo } from '../components/Base/AppLogo'
-import { AKInputText, AKInputPassword, AKButtonPrimary,
-  AKTitle, AKInternalLink, useAKStyles } from '../components/AKFramework'
+import {
+  AKInputText, AKInputPassword, AKButtonPrimary,
+  AKTitle, AKInternalLink, useAKStyles, showNotificationFailed,
+} from '../components/AKFramework'
 import { AppRequestClient } from '../lib/app-client'
 
 type LogInRequest = {
@@ -22,13 +24,15 @@ export default function Login() {
     password: '',
   })
 
-  const logIn = async () => {
+  async function logIn(event: { preventDefault: () => void }): Promise<void> {
+    event.preventDefault()
     try {
       const userInfo = await AppRequestClient.accountLogIn({ formData: logInRequest })
       console.log(userInfo)
       setCookie('hidden-me-auth-token', userInfo.key, { maxAge: 60 * 60 * 24 * 30 })
       document.location.href = '/dashboard'
     } catch (err) {
+      showNotificationFailed({ message: 'Can not log in with provided credentials.' })
       console.log('login failed: ', err)
     }
   }
@@ -54,7 +58,7 @@ export default function Login() {
             setLogInRequest({ ...logInRequest, password: e.target.value })
           }}
           />
-          <AKButtonPrimary label="Login" onClick={() => logIn()} />
+          <AKButtonPrimary label="Login" onClick={e => logIn(e)} />
         </form>
         <Text ta="center" mt="md">
                     Don&apos;t have an account?{' '}
